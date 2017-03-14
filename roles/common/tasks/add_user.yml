@@ -10,7 +10,7 @@
 
 - name: add system user
   user: name={{ user_name }} shell=/bin/bash
-        groups=adm append=yes
+        groups=adm,video,netdev append=yes
         password={{ user_pass_hash.stdout }}
   tags: user_mgnt
 

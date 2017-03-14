@@ -7,10 +7,10 @@
 
 
   roles:
-  - { role: common,
-        enable_vnc: True }
   - { role: workstation-xfce4,
         include_nm: false }
+  - { role: common,
+        enable_vnc: True }
 
   tasks:
   - name: Only run "update_cache=yes" if the last one is more than 3600 seconds ago
@@ -24,13 +24,21 @@
       state: present
     with_items: "{{other_user_packages}}"
 
-  - name: add gstreamer1.0 stuff
-    debug:
-      msg: 'TODO: add gstreaer'
+  - name: v4l2loopback and gstreamer install
+    apt:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - v4l2loopback-dkmsv4l2loopback-dkms
+      - gstreamer1.0-plugins-good
+      - gstreamer1.0-plugins-bad
+      - gstreamer1.0-plugins-ugly
+      - gstreamer1.0-tool
 
-  - name: add v4l2loopback device
-    debug:
-      msg: 'TODO: v4l2loopback install'
+  - name: add v4l2loopback module to kernel
+    modprobe:
+      name: v4l2loopback
+      state: present
 
   - name: run device as service on startup?
     debug:
