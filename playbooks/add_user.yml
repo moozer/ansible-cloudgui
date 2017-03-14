@@ -1,10 +1,11 @@
+- debug: msg="Adding user {{ user_name }} with some pasword and ssh key from {{ user_ssh_pub_key_file }}"
+
 - name: generate hash from password
   connection: local
   become: no
   command: mkpasswd --method=SHA-512 {{ user_passwd }}
   register: user_pass_hash
-  always_run: yes
-  changed_when: false
+  check_mode: no
   tags: user_mgnt
 
 - name: add system user
