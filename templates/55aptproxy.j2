@@ -1,0 +1,5 @@
+{% if enable_apt_proxy %}
+Acquire::http::Proxy "http://configserver01:9999";
+{% else %}
+#Acquire::http::Proxy "http://configserver01:9999";
+{% endif %}

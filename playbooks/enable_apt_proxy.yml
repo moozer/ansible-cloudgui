@@ -1,0 +1,16 @@
+- hosts: all
+  become: true
+
+  tasks:
+    - name: copy config file
+      template:
+        dest: "/etc/apt/apt.conf.d/55aptproxy"
+        src: "../templates/55aptproxy.j2"
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: refresh apt-cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
