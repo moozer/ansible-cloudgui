@@ -1,11 +1,13 @@
 - hosts: all
-  user: root
+  become: true
 
   vars:
     include_nm: False
     enable_vnc: True
     other_user_packages:
     - chromium
+
+    - include: passwords.yml
 
   roles:
   - workstation-xfce4
@@ -15,6 +17,10 @@
     apt:
       update_cache: yes
       cache_valid_time: 3600
+
+  - name: include add user
+    include: playbooks/add_user.yml
+    tags: user_mgnt
 
   - name: install vnc stuff
     apt:

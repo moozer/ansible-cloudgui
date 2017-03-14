@@ -1,0 +1,19 @@
+- name: generate hash from password
+  connection: local
+  become: no
+  command: mkpasswd --method=SHA-512 {{ user_passwd }}
+  register: user_pass_hash
+  always_run: yes
+  changed_when: false
+  tags: user_mgnt
+
+- name: add system user
+  user: name={{ user_name }} shell=/bin/bash
+        groups=adm append=yes
+        password={{ user_pass_hash.stdout }}
+  tags: user_mgnt
+
+- name: add public key to authorized keys
+  authorized_key: user={{ user_name }}
+                  key="{{ lookup('file', user_ssh_pub_key_file ) }}"
+  tags: user_mgnt
