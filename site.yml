@@ -2,47 +2,21 @@
   become: true
 
   vars:
-    include_nm: False
-    enable_vnc: True
     other_user_packages:
     - chromium
 
-    - include: passwords.yml
 
   roles:
-  - workstation-xfce4
+  - { role: common,
+        enable_vnc: True }
+  - { role: workstation-xfce4,
+        include_nm: false }
 
   tasks:
   - name: Only run "update_cache=yes" if the last one is more than 3600 seconds ago
     apt:
       update_cache: yes
       cache_valid_time: 3600
-
-  - name: include add user
-    include: playbooks/add_user.yml
-    tags: user_mgnt
-
-  - name: install vnc stuff
-    apt:
-      name: "{{ item }}"
-      state: present
-    with_items:
-    - tightvncserver
-    when: enable_vnc
-
-  - name: install lightdm config
-    template:
-      src: lightdm.conf.j2
-      dest: /etc/lightdm/lightdm.conf
-      owner: root
-      group: root
-      mode: 0644
-    notify: restart lightdm
-    when: enable_vnc
-
-  - name: add a user
-    debug:
-      msg: 'TODO: add user and add msn to video group'
 
   - name: install other user packages
     apt:
@@ -61,12 +35,3 @@
   - name: run device as service on startup?
     debug:
       msg: 'TODO: run gstreamer command on startup'
-
-
-
-
-  handlers:
-  - name: restart lightdm
-    service: name=lightdm state=restarted
-#  - common
-#  - workstation

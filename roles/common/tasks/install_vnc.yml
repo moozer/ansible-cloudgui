@@ -1,0 +1,20 @@
+
+- name: install vnc stuff
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - tightvncserver
+  when: enable_vnc
+  tags: gui
+
+- name: install lightdm config
+  template:
+    src: lightdm.conf.j2
+    dest: /etc/lightdm/lightdm.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart lightdm
+  when: enable_vnc
+  tags: gui

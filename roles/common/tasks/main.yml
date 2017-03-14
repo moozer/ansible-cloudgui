@@ -1,0 +1,7 @@
+  - name: include add user
+    include: add_user.yml
+    tags: user_mgnt
+
+  - name: include remote GUI
+    include: install_vnc.yml
+    tags: gui
