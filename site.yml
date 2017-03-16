@@ -4,7 +4,7 @@
   vars:
     other_user_packages:
     - chromium
-
+    fakeav_repo_path: https://github.com/moozer/fakeav.git
 
   roles:
   - { role: workstation-xfce4,
@@ -31,14 +31,24 @@
     with_items:
       - v4l2loopback-dkmsv4l2loopback-dkms
       - gstreamer1.0-plugins-good
-      - gstreamer1.0-plugins-bad
-      - gstreamer1.0-plugins-ugly
       - gstreamer1.0-tool
+
+#      - gstreamer1.0-plugins-bad
+#      - gstreamer1.0-plugins-ugly
 
   - name: add v4l2loopback module to kernel
     modprobe:
       name: v4l2loopback
       state: present
+
+
+  - name: "pull fakeav repo from {{ fakeav_repo_path }}"
+    git:
+      repo: "{{ fakeav_repo_path }}"
+      dest: /opt/fakeav
+
+#      accept_hostkey: no
+
 
   - name: run device as service on startup?
     debug:
